@@ -1,0 +1,5 @@
+CONFIG_DBHOST # database host
+CONFIG_DBNAME # database name
+CONFIG_DBPASS # database password
+CONFIG_DBUSER # database user
+CONFIG_SERVER_PORT # port of web server

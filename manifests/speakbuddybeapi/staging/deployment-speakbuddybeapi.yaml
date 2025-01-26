@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: speakbuddybeapi
+  name: speakbuddybeapi
+  namespace: speakbuddybe-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speakbuddybeapi
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: speakbuddybeapi
+    spec:
+      containers:
+      - image: tandrysyawaludin/speakbuddybeapik8s:0.1.0
+        name: speakbuddybeapik8s
+        resources: {}
+        env:
+          - name: CONFIG_DBPASS
+            valueFrom:
+              secretKeyRef:
+                key: rootpassword
+                name: mysql-password
+          - name: CONFIG_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                key: dbname
+                name: speakbuddybe-cm
+          - name: CONFIG_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                key: dbuser
+                name: speakbuddybe-cm
+          - name: CONFIG_SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: serverport
+                name: speakbuddybe-cm
+          - name: CONFIG_DBHOST
+            valueFrom:
+              configMapKeyRef:
+                key: dbhost
+                name: speakbuddybe-cm
+status: {}
