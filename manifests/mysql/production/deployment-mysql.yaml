@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
-  namespace: db-ns
+  namespace: speakbuddybe-db-ns
 spec:
   selector:
     matchLabels:
@@ -15,7 +15,7 @@ spec:
         app: mysql
     spec:
       containers:
-        - image: mysql:latest
+        - image: mysql:8.4.4
           name: mysql
           env:
             # Use secret in real usage
@@ -23,7 +23,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: rootpassword
-                  name: mysql-password
+                  name: speakbuddybe-db-password
           ports:
             - containerPort: 3306
               name: mysql

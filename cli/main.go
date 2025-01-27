@@ -12,17 +12,17 @@ var cfg *config.Config
 var err error
 
 func init() {
-	log.Print("Welcome to speakbuddybe api...")
+	log.Print("Welcome to speakbuddybe api")
 
 	// get a config
 	cfg, err = config.NewConfig()
 	if err != nil {
-		log.Fatal("Config init failed", err)
+		log.Fatalf("config init failed, err: %+v", err)
 	}
 
 	// migrate db
 	if err = speakbuddybeapp.DbInit(cfg.DB); err != nil {
-		log.Fatal("DB migration failed...")
+		log.Fatalf("db migration failed, err: %+v", err)
 	}
 
 	dao.Init(cfg.DB)

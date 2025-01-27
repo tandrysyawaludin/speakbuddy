@@ -1,7 +1,5 @@
--- insert into table songs
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Burn It Down", "Linkin Park");
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Earth Song", "Michael Jackson");
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Hey Jude", "The Beatles");
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Sound of Silence", "Simon and Garfunkel");
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Hotel California", "The Eagles");
-INSERT INTO songs (created_at, updated_at, name, artist) VALUES (now(), now(), "Comfortably Numb", "Pink Floyd");
+-- insert into table phrases
+INSERT INTO phrases (created_at, updated_at, phrase) VALUES (now(), now(), "test");
+
+-- insert into table users
+INSERT INTO users (created_at, updated_at, name) VALUES (now(), now(), "usertest");

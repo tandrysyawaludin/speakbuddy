@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"speakbuddy-be/pkg/config"
 	"speakbuddy-be/pkg/handlers"
 
@@ -18,6 +19,8 @@ func Start(cfg *config.Config) {
 		audioGroup.POST("/user/:user_id/phrase/:phrase_id", handlers.UploadAudio)
 		audioGroup.GET("/user/:user_id/phrase/:phrase_id/:audio_format", handlers.RetrieveAudio)
 	}
+
+	log.Printf("server start with port: %s", cfg.ServerPort)
 
 	r.Run(fmt.Sprintf(":%s", cfg.ServerPort))
 }

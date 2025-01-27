@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 )
 
@@ -17,6 +18,7 @@ func ConvertMp3ToWav(inputPath, outputPath string) error {
 
 	// Run the command and capture any errors
 	if err := cmd.Run(); err != nil {
+		log.Fatalf("convert mp3 to wav failed, err: %+v", err)
 		return fmt.Errorf("failed to convert MP3 to WAV: %v", err)
 	}
 
@@ -34,6 +36,7 @@ func ConvertWavToMp3(inputPath, outputPath string) error {
 
 	// Run the command and capture any errors
 	if err := cmd.Run(); err != nil {
+		log.Fatalf("convert wav to mp3 failed, err: %+v", err)
 		return fmt.Errorf("failed to convert WAV to MP3: %v", err)
 	}
 

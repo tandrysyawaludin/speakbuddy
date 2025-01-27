@@ -3,7 +3,7 @@ data:
   dbname: evergreen_speakbuddybe_db
   dbuser: root
   serverport: "8081"
-  dbhost: mysql.db-ns.svc.cluster.local:3306
+  dbhost: mysql.speakbuddybe-db-ns.svc.cluster.local:3306
 kind: ConfigMap
 metadata:
   creationTimestamp: null
