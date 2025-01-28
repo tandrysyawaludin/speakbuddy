@@ -19,7 +19,7 @@ spec:
         app: speakbuddybeapi
     spec:
       containers:
-      - image: tandrysyawaludin/speakbuddybeapik8s:0.5.0-staging
+      - image: tandrysyawaludin/speakbuddybeapik8s:0.6.1-staging
         name: speakbuddybeapik8s
         resources: {}
         env:

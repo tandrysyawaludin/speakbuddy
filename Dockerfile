@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY pkg ./pkg
 COPY cli ./cli
+COPY cli ./cli 
 COPY go.mod ./
 RUN go mod tidy -e
 

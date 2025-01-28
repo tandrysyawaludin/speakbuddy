@@ -20,7 +20,7 @@ type Config struct {
 var (
 	dbHost     = "localhost:3306"
 	dbName     = "evergreen_speakbuddybe_db"
-	dbPass     = "green"
+	dbPass     = "password"
 	dbUser     = "root"
 	serverPort = "8081"
 )

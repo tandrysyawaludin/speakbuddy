@@ -58,11 +58,13 @@ serve:
 	kubectl port-forward -n $(SPEAKBUDDYBE_NAMESPACE) svc/speakbuddybeapi 8081
 
 # CLEAN UP RESOURCES
-clean-all: clean-db clean-app
+clean-all: clean-db clean-app clean-docker
 clean-db:
 	kubectl delete ns $(SPEAKBUDDYBE_DB_NAMESPACE) || true
 clean-app:
 	kubectl delete ns $(SPEAKBUDDYBE_NAMESPACE) || true
+clean-docker:
+	docker system prune -a
 
 # GENERATE FILE
 ## generate deployement file

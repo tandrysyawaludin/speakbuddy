@@ -11,40 +11,43 @@
 ## run
 1. setup mysql as a db (if have not setup db yet)
 ```
-make ENV=<env> mysql-setup
+> make ENV=<env> mysql-setup
 ```
 
 2. open connection to mysql and create db (if have not setup db yet)
 ```
-make mysql-open
+> make mysql-open
 ```
 
 if meet this error below please wait a few minutes and try again
 
 ```
-error: Internal error occurred: unable to upgrade connection: container not found ("mysql")
+> error: Internal error occurred: unable to upgrade connection: container not found ("mysql")
 ```
 
 3. create new db (if have not setup db yet)
 
 ```
-create database evergreen_speakbuddybe_db;
+> mysql -u root -p
+> create database evergreen_speakbuddybe_db;
 ```
 
 4. setup docker, build and publish the image
 ```
-make ENV=<env> VERSION=<version> docker-setup
+> make ENV=<env> VERSION=<version> docker-setup
 ```
 
 5. setup speakbuddybeapi
 ```
-make ENV=<env> VERSION=<version> speakbuddybeapi-setup
+> make ENV=<env> VERSION=<version> speakbuddybeapi-setup
 ```
 
 6. serve the application
 ```
-make serve
+> make serve
 ```
+
+7. access the application with this host http://localhost:8081
 
 ## other
 - kubectl get storageclasses.storage.k8s.io
@@ -54,4 +57,3 @@ make serve
 - kubectl get pods -n <namespace>
 - kubectl describe pod <pod-name> -n <namespace>
 - kubectl logs <pod-name> -n <namespace>
-- docker system prune

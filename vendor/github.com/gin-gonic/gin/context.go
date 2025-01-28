@@ -610,25 +610,21 @@ func (c *Context) MultipartForm() (*multipart.Form, error) {
 func (c *Context) SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	src, err := file.Open()
 	if err != nil {
-		log.Fatalf("save the uploaded file failed, err: %+v", err)
 		return err
 	}
 	defer src.Close()
 
 	if err = os.MkdirAll(filepath.Dir(dst), 0750); err != nil {
-		log.Fatalf("save the uploaded file failed, err: %+v", err)
 		return err
 	}
 
 	out, err := os.Create(dst)
 	if err != nil {
-		log.Fatalf("save the uploaded file failed, err: %+v", err)
 		return err
 	}
 	defer out.Close()
 
 	_, err = io.Copy(out, src)
-	log.Fatalf("save the uploaded file failed, err: %+v", err)
 	return err
 }
 
