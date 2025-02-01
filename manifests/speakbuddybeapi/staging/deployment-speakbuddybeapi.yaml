@@ -19,7 +19,7 @@ spec:
         app: speakbuddybeapi
     spec:
       containers:
-      - image: tandrysyawaludin/speakbuddybeapik8s:0.6.1-staging
+      - image: tandrysyawaludin/speakbuddybeapik8s:0.6.9-staging
         name: speakbuddybeapik8s
         resources: {}
         env:
@@ -48,4 +48,24 @@ spec:
               configMapKeyRef:
                 key: dbhost
                 name: speakbuddybe-cm
+          - name: CONFIG_SFTPHOST
+            valueFrom:
+              configMapKeyRef:
+                key: sftphost
+                name: speakbuddybe-cm
+          - name: CONFIG_SFTPPORT
+            valueFrom:
+              configMapKeyRef:
+                key: sftpport
+                name: speakbuddybe-cm
+          - name: CONFIG_SFTPUSER
+            valueFrom:
+              configMapKeyRef:
+                key: sftpuser
+                name: speakbuddybe-cm
+          - name: CONFIG_SFTPPASS
+            valueFrom:
+              secretKeyRef:
+                key: sftppassword
+                name: speakbuddybe-db-password
 status: {}

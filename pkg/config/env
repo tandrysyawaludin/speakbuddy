@@ -3,3 +3,8 @@ CONFIG_DBNAME # database name
 CONFIG_DBPASS # database password
 CONFIG_DBUSER # database user
 CONFIG_SERVER_PORT # port of web server
+
+CONFIG_SFTPHOST # sftp host
+CONFIG_SFTPPORT # sftp port
+CONFIG_SFTPPASS # sftp password
+CONFIG_SFTPUSER # sftp user

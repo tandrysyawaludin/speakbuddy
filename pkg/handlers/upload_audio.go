@@ -47,15 +47,27 @@ func UploadAudio(c *gin.Context) {
 		log.Printf("[ERROR] retrieve the audio file from the request failed, err: %+v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"request_id": requestid.Get(c),
-			"error": "audio file is required",
+			"error":      "audio file is required",
+		})
+		return
+	}
+	if filepath.Ext(file.Filename) != ".mp3" {
+		c.JSON(http.StatusOK, gin.H{
+			"request_id": requestid.Get(c),
+			"error":      "only allow mp3 format",
 		})
 		return
 	}
 
-	tempDir := "./temp"
+	tempDir := "./original_file"
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(tempDir, os.ModePerm); err != nil {
-			log.Fatalf("[ERROR] failed to create temp directory: %+v", err)
+			log.Printf("[ERROR] failed to create temp directory: %+v", err)
+			c.JSON(http.StatusOK, gin.H{
+				"request_id": requestid.Get(c),
+				"error":      err.Error(),
+			})
+			return
 		}
 	}
 
@@ -65,15 +77,15 @@ func UploadAudio(c *gin.Context) {
 		log.Printf("[ERROR] save uploaded audio file failed, err: %+v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"request_id": requestid.Get(c),
-			"error": err.Error(),
+			"error":      err.Error(),
 		})
 		return
 	}
 
-	storageDir := "./storage"
+	storageDir := "./speakbuddy_storage"
 	if _, err := os.Stat(storageDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(storageDir, os.ModePerm); err != nil {
-			log.Fatalf("[ERROR] failed to create storage directory: %+v", err)
+			log.Printf("[ERROR] failed to create storage directory: %+v", err)
 		}
 	}
 
@@ -83,7 +95,7 @@ func UploadAudio(c *gin.Context) {
 	if err := utils.ConvertMp3ToWav(tempFilePath, storedFilePath); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"request_id": requestid.Get(c),
-			"error": err.Error(),
+			"error":      err.Error(),
 		})
 		return
 	}
@@ -97,14 +109,14 @@ func UploadAudio(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"request_id": requestid.Get(c),
-			"error": "failed to save file details to database",
+			"error":      "failed to save file details to database",
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"request_id": requestid.Get(c),
-		"message": "audio file uploaded successfully",
+		"message":    "audio file uploaded successfully",
 	})
 }
 

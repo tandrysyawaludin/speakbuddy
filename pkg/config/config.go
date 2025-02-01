@@ -13,6 +13,10 @@ type Config struct {
 	DbName     string `yaml:"DbName"`
 	DbPass     string `yaml:"DbPass"`
 	DbUser     string `yaml:"DbUser"`
+	SftpHost   string `yaml:"SftpHost"`
+	SftpPort   string `yaml:"SftpPort"`
+	SftpPass   string `yaml:"SftpPass"`
+	SftpUser   string `yaml:"SftpUser"`
 	DB         *gorm.DB
 	ServerPort string `yaml:"ServerPort"`
 }
@@ -23,6 +27,10 @@ var (
 	dbPass     = "password"
 	dbUser     = "root"
 	serverPort = "8081"
+	sftpHost   = ""
+	sftpPort   = ""
+	sftpPass   = ""
+	sftpUser   = ""
 )
 
 func NewConfig() (*Config, error) {
@@ -33,6 +41,10 @@ func NewConfig() (*Config, error) {
 		DbPass:     dbPass,
 		DbUser:     dbUser,
 		ServerPort: serverPort,
+		SftpHost:   sftpHost,
+		SftpPort:   sftpPort,
+		SftpUser:   sftpUser,
+		SftpPass:   sftpPass,
 	}
 
 	// update config values from env, if any
@@ -64,5 +76,21 @@ func (c *Config) GETENVs() {
 
 	if val, found := os.LookupEnv("CONFIG_SERVER_PORT"); found {
 		c.ServerPort = val
+	}
+
+	if val, found := os.LookupEnv("CONFIG_SFTPHOST"); found {
+		c.SftpHost = val
+	}
+
+	if val, found := os.LookupEnv("CONFIG_SFTPPORT"); found {
+		c.SftpPort = val
+	}
+
+	if val, found := os.LookupEnv("CONFIG_SFTPPASS"); found {
+		c.SftpPass = val
+	}
+
+	if val, found := os.LookupEnv("CONFIG_SFTPUSER"); found {
+		c.SftpUser = val
 	}
 }

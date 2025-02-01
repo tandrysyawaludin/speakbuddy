@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"speakbuddy-be/pkg/dao"
 	"speakbuddy-be/pkg/dto"
 	"speakbuddy-be/pkg/utils"
@@ -15,7 +14,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// RetrieveAudio retrieves and converts the stored audio file to the requested format
 func RetrieveAudio(c *gin.Context) {
 	audioFormat := c.Param("audio_format")
 
@@ -33,7 +31,6 @@ func RetrieveAudio(c *gin.Context) {
 		return
 	}
 
-	// Validate user and phrase
 	if !isValidUser(userID) || !isValidPhrase(phraseID) {
 		c.JSON(http.StatusOK, gin.H{
 			"request_id": requestid.Get(c),
@@ -56,35 +53,23 @@ func RetrieveAudio(c *gin.Context) {
 	}
 	storedFilePath := audiFileData.FilePath
 
-	// If the requested format is different from the stored format, convert the file
 	requestedExtension := "." + audioFormat
-	if requestedExtension != ".wav" { // Assuming stored format is WAV
-		tempFilePath := fmt.Sprintf("./temp/user_%d_phrase_%d.%s", userID, phraseID, audioFormat)
-
-		// Perform the conversion based on the requested format
-		switch audioFormat {
-		case "mp3":
-			err = utils.ConvertMp3ToWav(storedFilePath, tempFilePath)
-		default:
-			c.JSON(http.StatusOK, gin.H{
-				"request_id": requestid.Get(c),
-				"error": "unsupported audio format",
-			})
-			return
-		}
-
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"request_id": requestid.Get(c),
-				"error": "audio conversion failed",
-			})
-			return
-		}
-
-		defer os.Remove(tempFilePath) // Clean up temporary file after response
-		storedFilePath = tempFilePath
+	if requestedExtension != ".mp3" {
+		c.JSON(http.StatusOK, gin.H{
+			"request_id": requestid.Get(c),
+			"error":      "only allow mp3 format",
+		})
+		return
 	}
 
-	// Serve the audio file
+	tempFilePath := fmt.Sprintf("./original_file/user_%d_phrase_%d.%s", userID, phraseID, audioFormat)
+	if err := utils.ConvertWavToMp3(storedFilePath, tempFilePath); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"request_id": requestid.Get(c),
+			"error":      err.Error(),
+		})
+		return
+	}
+
 	c.File(storedFilePath)
 }

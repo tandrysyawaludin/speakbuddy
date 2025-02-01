@@ -15,6 +15,9 @@ SPEAKBUDDYBE_DB_NAMESPACE = speakbuddybe-db-ns
 SPEAKBUDDYBE_DB_SECRET_NAME ?= speakbuddybe-db-password
 SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH = $(MANIFESTS_DIR)/speakbuddybeapi/$(ENV)/deployment-speakbuddybeapi.yaml
 
+SFTP_IP_RANGE ?= 192.168.1.0/24
+SFTP_TARGET_IP ?= 192.168.1.1
+
 # DEPLOY MYSQL
 
 ## mysql setup
@@ -54,14 +57,21 @@ speakbuddybeapi-create-ns:
 	kubectl create -f $(MANIFESTS_DIR)/speakbuddybeapi/$(ENV)/configmap-speakbuddybeapi.yaml
 
 ## SERVE APPLICATION
-serve:
+serve-app:
 	kubectl port-forward -n $(SPEAKBUDDYBE_NAMESPACE) svc/speakbuddybeapi 8081
+
+## SERVE SFTP
+set-sftp-network:
+	docker network create --subnet=$(SFTP_IP_RANGE) sftp_network
+serve-sftp:
+	docker run --name speakbuddy-sftpgo-$(ENV) --net sftp_network --ip $(SFTP_TARGET_IP) -p 8080:8080 -p 2022:2022 -d drakkan/sftpgo:v2.6.4-alpine
+	docker inspect speakbuddy-sftpgo-$(ENV) | grep "IPAddress"
 
 # CLEAN UP RESOURCES
 clean-all: clean-db clean-app clean-docker
-clean-db:
+clean-db-ns:
 	kubectl delete ns $(SPEAKBUDDYBE_DB_NAMESPACE) || true
-clean-app:
+clean-app-ns:
 	kubectl delete ns $(SPEAKBUDDYBE_NAMESPACE) || true
 clean-docker:
 	docker system prune -a
@@ -120,5 +130,25 @@ generate-speakbuddybeapi-deployment-file:
 	@echo "              configMapKeyRef:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
 	@echo "                key: dbhost" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
 	@echo "                name: $(SPEAKBUDDYBEAPI_CONFIGMAP_NAME)" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "          - name: CONFIG_SFTPHOST" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "            valueFrom:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "              configMapKeyRef:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                key: sftphost" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                name: $(SPEAKBUDDYBEAPI_CONFIGMAP_NAME)" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "          - name: CONFIG_SFTPPORT" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "            valueFrom:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "              configMapKeyRef:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                key: sftpport" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                name: $(SPEAKBUDDYBEAPI_CONFIGMAP_NAME)" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "          - name: CONFIG_SFTPUSER" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "            valueFrom:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "              configMapKeyRef:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                key: sftpuser" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                name: $(SPEAKBUDDYBEAPI_CONFIGMAP_NAME)" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "          - name: CONFIG_SFTPPASS" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "            valueFrom:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "              secretKeyRef:" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                key: sftppassword" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
+	@echo "                name: $(SPEAKBUDDYBE_DB_SECRET_NAME)" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
 	@echo "status: {}" >> $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH)
 	@echo "Generated $(SPEAKBUDDYBE_DEPLOYMENT_FILE_PATH) successfully!"

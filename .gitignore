@@ -25,5 +25,5 @@ go.work.sum
 .env
 
 # folder file
-/storage/
-/temp/
+/speakbuddy_storage/
+/original_file/

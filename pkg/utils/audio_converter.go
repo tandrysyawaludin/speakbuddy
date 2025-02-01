@@ -3,38 +3,46 @@ package utils
 import (
 	"errors"
 	"log"
+	"os"
 	"os/exec"
 )
 
-// ConvertMp3ToWav converts an MP3 file to WAV format using FFmpeg
 func ConvertMp3ToWav(inputPath, outputPath string) error {
-	// Check if input and output paths are provided
 	if inputPath == "" || outputPath == "" {
 		return errors.New("input and output paths must not be empty")
 	}
 
-	// FFmpeg command to convert MP3 to WAV
+	os.Remove(outputPath)
+	defer os.Remove(inputPath)
+
 	cmd := exec.Command("ffmpeg", "-i", inputPath, "-ar", "44100", "-ac", "2", "-f", "wav", outputPath)
 
-	// Run the command and capture any errors
 	if err := cmd.Run(); err != nil {
-		log.Printf("[ERROR] convert mp3 to wav failed, %s %s err: %+v", inputPath, outputPath, err,)
+		log.Printf("[ERROR] convert mp3 to wav failed, %s %s err: %+v", inputPath, outputPath, err)
 		return errors.New("failed to convert mp3 to wav")
+	}
+
+	if err := UploadToSftp(outputPath, outputPath); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func ConvertWavToMp3(inputPath, outputPath string) error {
-	// Check if input and output paths are provided
+func ConvertWavToMp3(outputPath, inputPath string) error {
 	if inputPath == "" || outputPath == "" {
 		return errors.New("input and output paths must not be empty")
 	}
 
-	// FFmpeg command to convert WAV to MP3
+	os.Remove(outputPath)
+	os.Remove(inputPath)
+
+	if err := DownloadFromSftp(outputPath, inputPath); err != nil {
+		return err
+	}
+
 	cmd := exec.Command("ffmpeg", "-i", inputPath, "-codec:a", "libmp3lame", "-qscale:a", "2", outputPath)
 
-	// Run the command and capture any errors
 	if err := cmd.Run(); err != nil {
 		log.Printf("[ERROR] convert wav to mp3 failed, err: %+v", err)
 		return errors.New("failed to convert wav to mp3")

@@ -4,6 +4,9 @@ data:
   dbuser: root
   serverport: "8081"
   dbhost: mysql.speakbuddybe-db-ns.svc.cluster.local:3306
+  sftphost: "192.168.1.2"
+  sftpport: "2022"
+  sftpuser: sftp_user
 kind: ConfigMap
 metadata:
   creationTimestamp: null
