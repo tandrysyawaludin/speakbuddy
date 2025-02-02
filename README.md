@@ -7,8 +7,8 @@
 ## preparation
 
 ### docker setup
-- install docker or download docker desktop
-- install kubernetes or enable kubernetes in docker desktop
+- install docker or download docker desktop https://www.docker.com/products/docker-desktop/
+- install kubernetes or enable kubernetes in docker desktop https://docs.docker.com/desktop/features/kubernetes/
 
 ### mysql setup
 1. setup mysql as a db (if have not setup db yet)
@@ -37,7 +37,7 @@ if meet this error below please wait a few minutes and try again
 ### sftp setup
 1. set docker network for sftpgo
 ```
-make SFTP_IP_RANGE=<sftp_ip_range> set-sftp-network
+> make SFTP_IP_RANGE=<sftp_ip_range> set-sftp-network
 ```
 
 2. setup sftpgo
@@ -64,7 +64,7 @@ make SFTP_IP_RANGE=<sftp_ip_range> set-sftp-network
 
 1. setup docker, build and publish the image
 ```
-> make ENV=<env> VERSION=<version> docker-setup
+> make ENV=<env> VERSION=<version> docker-speakbuddybeapi-setup
 ```
 
 2. setup speakbuddybeapi
@@ -72,35 +72,35 @@ make SFTP_IP_RANGE=<sftp_ip_range> set-sftp-network
 > make ENV=<env> VERSION=<version> speakbuddybeapi-setup
 ```
 
-3. serve the application
+3. serve the speakbuddybeapi
 ```
-> make serve-app
+> make serve-speakbuddybeapi
 ```
 
-4. access the application with this host http://localhost:8081
+4. access the speakbuddybeapi with this host http://localhost:8081
 
 ## reset everything
 - reset all
 ```
-make clean-all
+> make clean-all
 ```
 
 - reset database only
 ```
-make clean-db-ns
+> make clean-db-ns
 ```
 
 - reset app only
 ```
-make clean-app-ns
+> make clean-app-ns
 ```
 
 - reset docker only
 ```
-make clean-docker
+> make clean-docker
 ```
 
-## other
+## other (if needed)
 - ssh-keygen -R "[localhost]:2022"
 - kubectl get storageclasses.storage.k8s.io
 - kubectl get endpoints
@@ -109,3 +109,4 @@ make clean-docker
 - kubectl get pods -n <namespace>
 - kubectl describe pod <pod-name> -n <namespace>
 - kubectl logs <pod-name> -n <namespace>
+- kubectl delete ns <namespace>

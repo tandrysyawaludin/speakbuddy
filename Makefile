@@ -33,18 +33,18 @@ mysql-open:
 	kubectl exec -it -n $(SPEAKBUDDYBE_DB_NAMESPACE) $$(kubectl get pods -n $(SPEAKBUDDYBE_DB_NAMESPACE) -l app=mysql -o jsonpath="{.items[0].metadata.name}") -- bash
 
 # DEPLOY APP
-deploy-app: docker-setup speakbuddybeapi-setup
+deploy-speakbuddybeapi: docker-setup speakbuddybeapi-setup
 
 ## docker build
-docker-setup: docker-build docker-tag docker-login docker-push
-docker-build:
+docker-speakbuddybeapi-setup: docker-speakbuddybeapi-build docker-speakbuddybeapi-tag docker-speakbuddybeapi-login docker-speakbuddybeapi-push
+docker-speakbuddybeapi-build:
 	docker build -t $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG) .
-docker-tag:
+docker-speakbuddybeapi-tag:
 	docker tag $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG) $(DOCKERHUB_USERNAME)/$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)
 	docker images | grep $(DOCKER_IMAGE_NAME)
-docker-login:
+docker-speakbuddybeapi-login:
 	docker login
-docker-push:
+docker-speakbuddybeapi-push:
 	docker push $(DOCKERHUB_USERNAME)/$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)
 
 ## speakbuddybeAPI setup
@@ -57,7 +57,7 @@ speakbuddybeapi-create-ns:
 	kubectl create -f $(MANIFESTS_DIR)/speakbuddybeapi/$(ENV)/configmap-speakbuddybeapi.yaml
 
 ## SERVE APPLICATION
-serve-app:
+serve-speakbuddybeapi:
 	kubectl port-forward -n $(SPEAKBUDDYBE_NAMESPACE) svc/speakbuddybeapi 8081
 
 ## SERVE SFTP
