@@ -1,17 +1,42 @@
 # speakbuddy
 speakbuddy is app for upload and retrieve audio file. it only accept mp3 but will store file in the server as a wav file.
 
+## business flow
+
 ## architechture diagram
 ![Untitled drawing](https://github.com/user-attachments/assets/19c92f76-5f04-4eb9-836f-989ed5e3436a)
+- client (web app or app) connect to speakbuddybeapi via nginx ingress
+- speakbuddybeapi store text data in mysql
+- speakbuddybeapi store audio file in sftp
+
+## entity relation diagram (db)
+![image](https://github.com/user-attachments/assets/49ec4d9d-62c3-4cb0-801d-a0ccc8eaaac2)
+- AudioFile: store data relation between user, phrase and audio file
+- Phrase: store data phrase
+- User: store data user
 
 ## sequence diagram
-1. upload audio file
-   
+### upload audio file
 ![image](https://github.com/user-attachments/assets/d8621752-3603-4957-a6bd-37cc603f1cf1)
+1. user open client (web app or app)
+2. user fill input user, phrase and choose audio file in the form
+3. user submit form
+4. user get response (success or error)
 
-2. retreive audio file
-   
+> As a user,
+> I want to upload an audio file along with my user ID and phrase ID,
+> So that the system can associate the audio with my profile and a specific phrase.
+
+### retreive audio file
 ![image](https://github.com/user-attachments/assets/04a3c5cb-099e-4069-84c2-985c5a43b654)
+1. user open client (web app or app)
+2. user fill input user and phrase in the form
+3. user submit form
+4. user get file as a response (success or error)
+
+> As a user,
+> I want to retrieve an audio file associated with my user ID and phrase ID,
+> So that I can access and use the stored audio file in MP3 format.
 
 ## env
 - staging (non-live)
@@ -27,6 +52,11 @@ speakbuddy is app for upload and retrieve audio file. it only accept mp3 but wil
 1. setup mysql as a db (if have not setup db yet)
 ```
 > make ENV=<env> mysql-setup
+```
+you can set or check db base64 encoded password by check `data.rootpassword` this file `manifests/mysql/<env>/secret-mysql.yaml`
+```
+data:
+  rootpassword: cGFzc3dvcmQ=
 ```
 
 2. open connection to mysql and create db (if have not setup db yet)
@@ -45,6 +75,13 @@ if meet this error below please wait a few minutes and try again
 ```
 > mysql -u root -p
 > create database evergreen_speakbuddybe_db;
+```
+
+4. seed data (if needed)
+```
+> use evergreen_speakbuddybe_db;
+> INSERT INTO phrases (created_at, updated_at, phrase) VALUES (now(), now(), "test");
+> INSERT INTO users (created_at, updated_at, name) VALUES (now(), now(), "usertest");
 ```
 
 ### 3. sftp setup
