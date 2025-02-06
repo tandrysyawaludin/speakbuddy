@@ -100,6 +100,10 @@ if meet this error below please wait a few minutes and try again
 4. create admin account
 
 5. create user account
+```
+usename: sftp_user
+password: sftp_user
+```
 
 6. visit http://localhost:8080/web/client (logout from prev session or new incognito)
 
